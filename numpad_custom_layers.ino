@@ -554,8 +554,8 @@ void setup() {
   for (cnt = 0; cnt < COLUMNS; cnt++) {
     pinMode(input_pins[cnt], INPUT_PULLUP);
   }
-
-  pinMode(LED_BUILTIN, OUTPUT);
+  
+  pinMode(17, OUTPUT);
 
 }
 
@@ -584,8 +584,9 @@ void loop() {
   // in case we want to adjust heartbeat freq.
 #endif
 
-  // Turn off blinking LED
+  // Turn off at least one LED
   digitalWrite(17, LOW);
+
 
   // since we use non zero to indicate pressed state, we need
   // to handle the edge case where millis() returns 0
