@@ -160,10 +160,10 @@ void keymap_to_keypress(int k)
       Keyboard.press('*');
       break;
     case K_MINUS:
-      Keyboard.press('-');
+      Keyboard.press(0xDE);
       break;
     case K_PLUS:
-      Keyboard.press('+');
+      Keyboard.press(0xDF);
       break;
     case K_ENTER:
       Keyboard.press(0xE0);
@@ -357,10 +357,10 @@ void keymap_release(int k)
       Keyboard.release('*');
       break;
     case K_MINUS:
-      Keyboard.release('-');
+      Keyboard.release(0xDE);
       break;
     case K_PLUS:
-      Keyboard.release('+');
+      Keyboard.release(0xDF);
       break;
     case K_ENTER:
       Keyboard.release(0xE0);
@@ -555,6 +555,8 @@ void setup() {
     pinMode(input_pins[cnt], INPUT_PULLUP);
   }
 
+  pinMode(LED_BUILTIN, OUTPUT);
+
 }
 
 
@@ -581,6 +583,9 @@ void loop() {
   // should just make this into an unsigned char, but keeping it as int
   // in case we want to adjust heartbeat freq.
 #endif
+
+  // Turn off blinking LED
+  digitalWrite(17, LOW);
 
   // since we use non zero to indicate pressed state, we need
   // to handle the edge case where millis() returns 0
