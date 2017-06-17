@@ -31,6 +31,8 @@ int strobe_row = 0;
 int q = 0;
 int layer = 0;
 
+int rightmonitor = 0; // for my personal setup - if not zero we send commands for the right monitor. used on layer 2
+
 // Codes for numeric keypad
 // NUM  /   *   -
 //  7   8   9   x
@@ -100,39 +102,39 @@ int layer = 0;
 #define K_RWS7         47
 #define K_RWS8         48
 #define K_RWS9         49
+#define K_LCTRL        50
+#define K_DOUBLEO      51
+#define K_MONITOR      52
+#define K_KILL         53
 
-#define K_LCTRL        70
-#define K_DOUBLEO      71
-
-#define K_HELLO        577
-#define K_TEST         666
-#define K_NOTHING      999
+#define K_TEST         666  // Hail Satan
+#define K_NOP          999  // NOP / No operation / nothing
 
 int keymap[LAYERS][ROWS][COLUMNS] =
   // layer 0
 { {
-    { K_CHANGE_LAYER, K_SLASH, K_ASTERISK, K_MINUS },
-    { K_7,            K_8,     K_9,        0       },
-    { K_4,            K_5,     K_6,        K_PLUS  },
-    { K_1,            K_2,     K_3,        0       },
-    { 0,              K_0,     K_DOUBLEO,  K_ENTER }
+    { K_CHANGE_LAYER, K_SLASH, K_ASTERISK, K_MINUS  },
+    { K_7,            K_8,     K_9,        0        },
+    { K_4,            K_5,     K_6,        K_PLUS   },
+    { K_1,            K_2,     K_3,        0        },
+    { 0,              K_0,     K_DOUBLEO,  K_ENTER  }
   },
   // layer 1
   {
-    { K_CHANGE_LAYER, K_SLASH, K_ASTERISK, K_MINUS },
-    { K_HOME,         K_UP,    K_PAGEUP,   0       },
-    { K_LEFT,         K_5,     K_RIGHT,    K_PLUS  },
-    { K_END,          K_DOWN,  K_PAGEDOWN, 0       },
-    { 0,              K_INSERT, K_DELETE,   K_ENTER }
+    { K_CHANGE_LAYER, K_SLASH, K_ASTERISK, K_MINUS  },
+    { K_HOME,         K_UP,    K_PAGEUP,   0        },
+    { K_LEFT,         K_5,     K_RIGHT,    K_PLUS   },
+    { K_END,          K_DOWN,  K_PAGEDOWN, 0        },
+    { 0,              K_INSERT, K_DELETE,   K_ENTER  }
   },
   // layer 2
   {
-    { K_CHANGE_LAYER, K_SLASH, K_NOTHING,  K_MINUS },
-    { K_WS7,          K_WS8,   K_WS9,      0       },
-    { K_WS4,          K_WS5,   K_WS6,      K_LSHIFT},
-    { K_WS1,          K_WS2,   K_WS3,      0       },
-    { 0,              K_WS0,   K_NOTHING,  K_LCTRL }
-  }/*,
+    { K_CHANGE_LAYER, K_MONITOR,K_KILL,     K_NOP    },
+    { K_WS7,          K_WS8,    K_WS9,      0        },
+    { K_WS4,          K_WS5,    K_WS6,      K_LSHIFT },
+    { K_WS1,          K_WS2,    K_WS3,      0        },
+    { 0,              K_WS0,    K_NOP,      K_LCTRL  }
+  }/*
   // layer 3
   {
     { K_CHANGE_LAYER, K_SLASH, K_NOTHING,  K_MINUS },
@@ -152,6 +154,9 @@ void keymap_to_keypress(int k)
       layer++;
       if (layer >= LAYERS)
         layer = 0;
+      break;
+    case K_MONITOR:
+      rightmonitor = !rightmonitor;
       break;
     case K_SLASH:
       Keyboard.press('/');
@@ -242,42 +247,62 @@ void keymap_to_keypress(int k)
       Keyboard.press(KEY_LEFT_CTRL);
       break;
     case K_WS1:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('1');
       break;
     case K_WS2:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('2');
       break;
     case K_WS3:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('3');
       break;
     case K_WS4:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('4');
       break;
     case K_WS5:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('5');
       break;
     case K_WS6:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('6');
       break;
     case K_WS7:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('7');
       break;
     case K_WS8:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('8');
       break;
     case K_WS9:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('9');
       break;
     case K_WS0:
+      if (rightmonitor)
+        Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press('0');
       break;
@@ -331,16 +356,12 @@ void keymap_to_keypress(int k)
       Keyboard.press(KEY_LEFT_CTRL);
       Keyboard.press('9');
       break;
-
-
-
-    case K_HELLO:
-      Keyboard.write('H');
-      Keyboard.write('e');
-      Keyboard.write('l');
-      Keyboard.write('l');
-      Keyboard.write('o');
+    case K_KILL:
+      Keyboard.press(KEY_LEFT_GUI);
+      Keyboard.press(KEY_LEFT_SHIFT);
+      Keyboard.press('q');
       break;
+
 
     default:
       break;
@@ -435,42 +456,62 @@ void keymap_release(int k)
       Keyboard.release(KEY_LEFT_CTRL);
       break;
     case K_WS1:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('1');
       break;
     case K_WS2:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('2');
       break;
     case K_WS3:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('3');
       break;
     case K_WS4:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('4');
       break;
     case K_WS5:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('5');
       break;
     case K_WS6:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('6');
       break;
     case K_WS7:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('7');
       break;
     case K_WS8:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('8');
       break;
     case K_WS9:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('9');
       break;
     case K_WS0:
+      if (rightmonitor)
+        Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release(KEY_LEFT_GUI);
       Keyboard.release('0');
       break;
@@ -524,6 +565,12 @@ void keymap_release(int k)
       Keyboard.release(KEY_LEFT_CTRL);
       Keyboard.release('9');
       break;
+    case K_KILL:
+      Keyboard.release(KEY_LEFT_GUI);
+      Keyboard.release(KEY_LEFT_SHIFT);
+      Keyboard.release('q');
+      break;
+
 
 
 
@@ -554,7 +601,7 @@ void setup() {
   for (cnt = 0; cnt < COLUMNS; cnt++) {
     pinMode(input_pins[cnt], INPUT_PULLUP);
   }
-  
+
   pinMode(17, OUTPUT);
 
 }
